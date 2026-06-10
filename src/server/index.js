@@ -124,19 +124,11 @@ Return a JSON array of exactly 3 objects with these fields:
       ],
     });
 
-    console.log(`[discover] stop_reason=${response.stop_reason} content_types=${response.content.map(b=>b.type).join(",")}`);
     const textBlock = response.content.find((b) => b.type === "text");
-    if (!textBlock) {
-      console.log("[discover] no text block in response");
-      return res.json({ courses: [], error: false });
-    }
-    console.log(`[discover] text preview: ${textBlock.text.slice(0, 200)}`);
+    if (!textBlock) return res.json({ courses: [], error: false });
 
     const parsed = extractJSON(textBlock.text);
-    if (!parsed || !Array.isArray(parsed)) {
-      console.log(`[discover] extractJSON failed, raw text: ${textBlock.text.slice(0, 500)}`);
-      return res.json({ courses: [], error: false });
-    }
+    if (!parsed || !Array.isArray(parsed)) return res.json({ courses: [], error: false });
 
     const validCourses = parsed
       .filter((c) => c.title && c.url && c.provider)
