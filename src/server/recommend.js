@@ -30,35 +30,46 @@ function recommend(answers) {
   const {
     familiarity,   // 0-3
     role,          // string
-    goal,          // string
+    goal,          // string or array of strings
     devBackground, // 0-3
     timePerWeek,   // 0-2
     learningStyle, // array of strings
   } = answers;
 
+  // Normalize goal to array — backwards-compatible with old single-string format
+  const goals = Array.isArray(goal) ? goal : (goal ? [goal] : []);
+
   const hasCodingBackground = devBackground >= 2;
   const isCS = role === "cs-student" || devBackground >= 3;
-  const wantsNoCode = goal === "use-ai-at-work" && !hasCodingBackground;
-  const wantsBuildApps = goal === "build-apps";
-  const wantsDeepUnderstanding = goal === "understand-ai";
-  const wantsSideProject = goal === "side-project";
-  const wantsAutomate = goal === "automate-tasks";
+  const wantsNoCode = goals.includes("use-ai-at-work") && !hasCodingBackground;
+  const wantsBuildApps = goals.includes("build-apps");
+  const wantsDeepUnderstanding = goals.includes("understand-ai");
+  const wantsSideProject = goals.includes("side-project");
+  const wantsAutomate = goals.includes("automate-tasks");
+  const wantsUseAtWork = goals.includes("use-ai-at-work");
 
-  let candidateIds = [];
+  // Paths are now additive — each matching path contributes candidates.
+  // This lets two selected goals produce a merged, sensible course list.
+  const candidateIds = [];
+  const addPath = (ids) => {
+    for (const id of ids) {
+      if (!candidateIds.includes(id)) candidateIds.push(id);
+    }
+  };
 
   // === PATH: No-code / use AI at work ===
-  if (wantsNoCode || (goal === "use-ai-at-work" && familiarity <= 1)) {
-    candidateIds = [
+  if (wantsNoCode || (wantsUseAtWork && familiarity <= 1)) {
+    addPath([
       "ai-capabilities-limitations",
       "claude-101",
       "ai-fluency-framework",
       "project-nocode-automation",
-    ];
+    ]);
   }
 
   // === PATH: Build apps / side project with dev background ===
-  else if ((wantsBuildApps || wantsSideProject) && hasCodingBackground) {
-    candidateIds = [
+  if ((wantsBuildApps || wantsSideProject) && hasCodingBackground) {
+    addPath([
       "claude-101",
       "claude-platform-101",
       "claude-api-building",
@@ -66,24 +77,24 @@ function recommend(answers) {
       "claude-code-in-action",
       "intro-mcp",
       "project-claude-api-cli",
-    ];
+    ]);
   }
 
   // === PATH: Build apps without dev background ===
-  else if (wantsBuildApps || wantsSideProject) {
-    candidateIds = [
+  if ((wantsBuildApps || wantsSideProject) && !hasCodingBackground) {
+    addPath([
       "elements-of-ai",
       "claude-101",
       "freecodecamp-python",
       "claude-platform-101",
       "claude-api-building",
       "project-claude-api-cli",
-    ];
+    ]);
   }
 
   // === PATH: Deep understanding — CS/research ===
-  else if (wantsDeepUnderstanding && (isCS || familiarity >= 2)) {
-    candidateIds = [
+  if (wantsDeepUnderstanding && (isCS || familiarity >= 2)) {
+    addPath([
       "3b1b-neural-networks",
       "google-mlcc",
       "freecodecamp-python",
@@ -92,12 +103,12 @@ function recommend(answers) {
       "huggingface-nlp-course",
       "anthropic-model-spec",
       "project-karpathy-reproduce",
-    ];
+    ]);
   }
 
   // === PATH: Deep understanding — non-technical ===
-  else if (wantsDeepUnderstanding) {
-    candidateIds = [
+  if (wantsDeepUnderstanding && !(isCS || familiarity >= 2)) {
+    addPath([
       "elements-of-ai",
       "ai-capabilities-limitations",
       "3b1b-neural-networks",
@@ -106,12 +117,12 @@ function recommend(answers) {
       "anthropic-model-spec",
       "kaggle-intro-ml",
       "project-kaggle-classifier",
-    ];
+    ]);
   }
 
   // === PATH: Automate tasks (technical) ===
-  else if (wantsAutomate && hasCodingBackground) {
-    candidateIds = [
+  if (wantsAutomate && hasCodingBackground) {
+    addPath([
       "claude-101",
       "claude-platform-101",
       "claude-api-building",
@@ -119,32 +130,32 @@ function recommend(answers) {
       "intro-agent-skills",
       "intro-subagents",
       "project-claude-api-cli",
-    ];
+    ]);
   }
 
   // === PATH: Automate tasks (non-technical) ===
-  else if (wantsAutomate) {
-    candidateIds = [
+  if (wantsAutomate && !hasCodingBackground) {
+    addPath([
       "ai-capabilities-limitations",
       "claude-101",
       "ai-fluency-framework",
       "anthropic-cowork-intro",
       "project-nocode-automation",
-    ];
+    ]);
   }
 
   // === FALLBACK: generic beginner path ===
-  else {
-    candidateIds = [
+  if (candidateIds.length === 0) {
+    addPath([
       "ai-capabilities-limitations",
       "claude-101",
       "ai-fluency-framework",
       "google-mlcc",
       "project-nocode-automation",
-    ];
+    ]);
   }
 
-  // Deduplicate
+  // Deduplicate (addPath already prevents dups, but be safe)
   const unique = [...new Set(candidateIds)];
 
   // Sort topologically so prerequisites come first
@@ -262,6 +273,7 @@ function generateWhyForYou(course, answers) {
 
 function generateProfileSummary(answers) {
   const { familiarity, role, goal, devBackground, timePerWeek } = answers;
+  const goals = Array.isArray(goal) ? goal : (goal ? [goal] : []);
 
   const goalLabels = {
     "use-ai-at-work": "use AI tools more effectively at work or school",
@@ -284,7 +296,9 @@ function generateProfileSummary(answers) {
     3: "experienced with hands-on AI development",
   };
 
-  const goalText = goalLabels[goal] || "learn about AI";
+  const goalText = goals.length > 0
+    ? goals.map((g) => goalLabels[g] || g).join(" and ")
+    : "learn about AI";
   const timeText = timeLabels[timePerWeek] ?? "a few hours";
   const familiarityText = familiarityLabels[familiarity] || "learning";
   const hasCoding = devBackground >= 2;
@@ -307,18 +321,13 @@ function generateProfileSummary(answers) {
 
 function getProjectCard(answers) {
   const { goal, devBackground } = answers;
+  const goals = Array.isArray(goal) ? goal : (goal ? [goal] : []);
   const hasCodingBackground = devBackground >= 2;
 
-  if (goal === "use-ai-at-work" && !hasCodingBackground) {
-    return {
-      title: "Your Project: Automate a Weekly Task",
-      description:
-        "Build a custom Claude Project that automates a task you do at least once a week. No coding required — just a Claude account and what you learned about prompting.",
-      url: "https://claude.ai/",
-    };
-  }
-
-  if ((goal === "build-apps" || goal === "side-project" || goal === "automate-tasks") && hasCodingBackground) {
+  if (
+    (goals.includes("build-apps") || goals.includes("side-project") || goals.includes("automate-tasks")) &&
+    hasCodingBackground
+  ) {
     return {
       title: "Your Project: A Claude-Powered CLI Tool",
       description:
@@ -327,7 +336,7 @@ function getProjectCard(answers) {
     };
   }
 
-  if (goal === "understand-ai" && devBackground >= 2) {
+  if (goals.includes("understand-ai") && devBackground >= 2) {
     return {
       title: "Your Project: Reproduce a Zero to Hero Result",
       description:
@@ -336,12 +345,21 @@ function getProjectCard(answers) {
     };
   }
 
-  if (goal === "understand-ai") {
+  if (goals.includes("understand-ai")) {
     return {
       title: "Your Project: Train and Deploy a Classifier",
       description:
         "Train a simple classifier on a Kaggle dataset and deploy it as a web endpoint using FastAPI or Flask. A real, shippable project that consolidates everything you've learned.",
       url: "https://www.kaggle.com/competitions",
+    };
+  }
+
+  if (goals.includes("use-ai-at-work") && !hasCodingBackground) {
+    return {
+      title: "Your Project: Automate a Weekly Task",
+      description:
+        "Build a custom Claude Project that automates a task you do at least once a week. No coding required — just a Claude account and what you learned about prompting.",
+      url: "https://claude.ai/",
     };
   }
 

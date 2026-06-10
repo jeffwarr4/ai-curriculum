@@ -25,8 +25,9 @@ export const QUESTIONS = [
   },
   {
     id: "goal",
-    question: "What's your main goal with AI right now?",
-    type: "single",
+    question: "What are your main goals with AI right now?",
+    type: "multi",
+    maxSelect: 2,
     options: [
       { value: "use-ai-at-work", label: "Use AI tools more effectively at work or school — no coding" },
       { value: "automate-tasks", label: "Automate repetitive tasks in my current job" },

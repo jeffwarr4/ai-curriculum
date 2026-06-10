@@ -91,7 +91,8 @@ app.post("/api/discover", async (req, res) => {
     3: "a professional developer background",
   };
 
-  const goal = goalLabels[answers.goal] || answers.goal;
+  const answerGoals = Array.isArray(answers.goal) ? answers.goal : (answers.goal ? [answers.goal] : []);
+  const goal = answerGoals.map((g) => goalLabels[g] || g).join(" and ");
   const background = backgroundLabels[answers.devBackground] ?? "an unspecified background";
   const existingTitles = (existingCourses || [])
     .map((c) => `- ${c.title} (${c.provider})`)
