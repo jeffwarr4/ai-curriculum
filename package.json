@@ -1,0 +1,19 @@
+{
+  "name": "ai-curriculum",
+  "version": "1.0.0",
+  "description": "A free, honest AI learning path generator",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:frontend\"",
+    "dev:server": "node --watch src/server/index.js",
+    "dev:frontend": "cd src/frontend && npm run dev",
+    "build": "cd src/frontend && npm run build",
+    "start": "NODE_ENV=production node src/server/index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
