@@ -116,6 +116,8 @@ export default function Results({ answers }) {
   const [feedback, setFeedback] = useState("");
   const [feedbackSent, setFeedbackSent] = useState(false);
   const [shareLabel, setShareLabel] = useState("Share this path");
+  const [discoverState, setDiscoverState] = useState("idle");
+  const [discoverCourses, setDiscoverCourses] = useState([]);
 
   useEffect(() => {
     fetch("/api/recommend", {
@@ -171,6 +173,26 @@ export default function Results({ answers }) {
   const totalHours = nonProjectCourses.reduce((sum, c) => sum + c.duration_hours, 0);
   const totalPace = paceLabel(totalHours, answers.timePerWeek);
 
+  async function handleDiscover() {
+    setDiscoverState("loading");
+    try {
+      const r = await fetch("/api/discover", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answers, courses: nonProjectCourses }),
+      });
+      const d = await r.json();
+      if (d.error || !d.courses) {
+        setDiscoverState("error");
+      } else {
+        setDiscoverCourses(d.courses);
+        setDiscoverState("done");
+      }
+    } catch {
+      setDiscoverState("error");
+    }
+  }
+
   return (
     <div className="results">
       <header className="results-header">
@@ -187,7 +209,7 @@ export default function Results({ answers }) {
         </div>
 
         <div className="courses-section">
-          <h2 className="section-title">Your path — {nonProjectCourses.length} courses</h2>
+          <h2 className="section-title">Start Here</h2>
           <p className="section-sub">
             Ordered by prerequisite chain. Each course unlocks the next.
             {totalPace && <> Total: <strong>{totalPace}</strong>.</>}
@@ -197,6 +219,41 @@ export default function Results({ answers }) {
               <CourseCard key={course.id} course={course} index={i} timePerWeek={answers.timePerWeek} />
             ))}
           </div>
+        </div>
+
+        <div className="go-deeper-section">
+          <div className="go-deeper-header">
+            <div>
+              <h2 className="section-title">Go Deeper</h2>
+              <p className="section-sub">
+                Searched in real time · may include newer resources not in our curated list
+              </p>
+            </div>
+            {discoverState === "idle" && (
+              <button className="go-deeper-btn" onClick={handleDiscover}>
+                Find more courses →
+              </button>
+            )}
+          </div>
+
+          {discoverState === "loading" && (
+            <div className="go-deeper-loading">
+              <div className="loading-spinner" />
+              <span>Searching for more courses…</span>
+            </div>
+          )}
+
+          {(discoverState === "done" || discoverState === "error") && discoverCourses.length === 0 && (
+            <p className="go-deeper-empty">No additional courses found for this profile.</p>
+          )}
+
+          {discoverState === "done" && discoverCourses.length > 0 && (
+            <div className="courses-list">
+              {discoverCourses.map((course, i) => (
+                <CourseCard key={course.id} course={course} index={i} timePerWeek={answers.timePerWeek} />
+              ))}
+            </div>
+          )}
         </div>
 
         {projectCard && (
