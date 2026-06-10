@@ -49,9 +49,9 @@ function recommend(answers) {
   // === PATH: No-code / use AI at work ===
   if (wantsNoCode || (goal === "use-ai-at-work" && familiarity <= 1)) {
     candidateIds = [
-      "elements-of-ai",
-      "anthropic-prompt-engineering",
-      "deeplearning-chatgpt-prompt",
+      "ai-capabilities-limitations",
+      "claude-101",
+      "ai-fluency-framework",
       "project-nocode-automation",
     ];
   }
@@ -59,11 +59,12 @@ function recommend(answers) {
   // === PATH: Build apps / side project with dev background ===
   else if ((wantsBuildApps || wantsSideProject) && hasCodingBackground) {
     candidateIds = [
-      "anthropic-prompt-engineering",
-      "deeplearning-chatgpt-prompt",
-      "anthropic-api-fundamentals",
-      "deeplearning-functions-tools",
-      "anthropic-agents",
+      "claude-101",
+      "claude-platform-101",
+      "claude-api-building",
+      "claude-code-101",
+      "claude-code-in-action",
+      "intro-mcp",
       "project-claude-api-cli",
     ];
   }
@@ -72,10 +73,10 @@ function recommend(answers) {
   else if (wantsBuildApps || wantsSideProject) {
     candidateIds = [
       "elements-of-ai",
-      "anthropic-prompt-engineering",
+      "claude-101",
       "freecodecamp-python",
-      "deeplearning-chatgpt-prompt",
-      "anthropic-api-fundamentals",
+      "claude-platform-101",
+      "claude-api-building",
       "project-claude-api-cli",
     ];
   }
@@ -98,11 +99,11 @@ function recommend(answers) {
   else if (wantsDeepUnderstanding) {
     candidateIds = [
       "elements-of-ai",
+      "ai-capabilities-limitations",
       "3b1b-neural-networks",
       "google-mlcc",
-      "anthropic-prompt-engineering",
+      "claude-101",
       "anthropic-model-spec",
-      "freecodecamp-python",
       "kaggle-intro-ml",
       "project-kaggle-classifier",
     ];
@@ -111,10 +112,12 @@ function recommend(answers) {
   // === PATH: Automate tasks (technical) ===
   else if (wantsAutomate && hasCodingBackground) {
     candidateIds = [
-      "anthropic-prompt-engineering",
-      "anthropic-api-fundamentals",
-      "deeplearning-functions-tools",
-      "anthropic-agents",
+      "claude-101",
+      "claude-platform-101",
+      "claude-api-building",
+      "claude-code-101",
+      "intro-agent-skills",
+      "intro-subagents",
       "project-claude-api-cli",
     ];
   }
@@ -122,8 +125,9 @@ function recommend(answers) {
   // === PATH: Automate tasks (non-technical) ===
   else if (wantsAutomate) {
     candidateIds = [
-      "elements-of-ai",
-      "anthropic-prompt-engineering",
+      "ai-capabilities-limitations",
+      "claude-101",
+      "ai-fluency-framework",
       "anthropic-cowork-intro",
       "project-nocode-automation",
     ];
@@ -132,10 +136,10 @@ function recommend(answers) {
   // === FALLBACK: generic beginner path ===
   else {
     candidateIds = [
-      "elements-of-ai",
-      "anthropic-prompt-engineering",
+      "ai-capabilities-limitations",
+      "claude-101",
+      "ai-fluency-framework",
       "google-mlcc",
-      "kaggle-intro-ml",
       "project-nocode-automation",
     ];
   }
@@ -166,16 +170,46 @@ function generateWhyForYou(course, answers) {
   const hasCodingBackground = devBackground >= 2;
 
   const map = {
-    "elements-of-ai":
-      "A jargon-free foundation — covers the concepts that everything else builds on, without requiring any coding.",
-    "anthropic-prompt-engineering":
-      "The most direct path to getting real value from AI tools today. Prompting well is a skill, and this is the best place to learn it.",
+    "claude-101":
+      "Claude's own beginner course — the fastest way to go from curious to confident. Covers the essentials of interacting with Claude effectively, without any technical prerequisites.",
+    "ai-capabilities-limitations":
+      "A clear-eyed introduction to what AI can actually do and where it falls short — sets realistic expectations before you invest time in a longer learning path.",
+    "ai-fluency-framework":
+      "A mental model for using AI at work — what it's good at, how to fit it into your existing workflows, and how to keep improving as the tools evolve.",
     "anthropic-cowork-intro":
       "The fastest way to actually automate the tasks on your desk. Cowork lets Claude work directly on your files, folders, and apps — no coding, no setup complexity. This course gets you from first launch to confident daily use.",
-    "anthropic-api-fundamentals":
-      "Once you know how to prompt, this teaches you how to wire Claude into real software — the core skill for building AI-powered tools.",
-    "anthropic-agents":
-      "For when you want Claude to do more than answer questions — this covers multi-step autonomous tasks and tool use.",
+    "ai-fluency-students":
+      "A clear-eyed introduction to AI for students — what it can do, where it gets things wrong, and how to use it as a genuine learning tool rather than a shortcut.",
+    "ai-fluency-educators":
+      "Built specifically for teachers — practical ways to use AI for lesson planning, feedback, and classroom efficiency without losing the human element of good teaching.",
+    "ai-fluency-nonprofits":
+      "How to use Claude to amplify your mission — reducing admin overhead, improving communications, and doing more with the resources you have.",
+    "ai-fluency-small-business":
+      "Practical AI for running a business — from drafting customer communications to automating the administrative work that eats into your week.",
+    "teaching-ai-fluency":
+      "For those who want to build AI capability within their team or organization — frameworks for training others and fostering responsible, effective adoption.",
+    "claude-platform-101":
+      "Understand the Anthropic platform before you start building — models, APIs, rate limits, and how all the pieces fit together. The foundation everything else builds on.",
+    "claude-api-building":
+      "The hands-on API course that turns prompting knowledge into shipping knowledge. After this, you can build real Claude-powered tools.",
+    "claude-code-101":
+      "Learn Claude Code from the ground up — setup, core commands, and the workflows that make AI-assisted development actually click.",
+    "claude-code-in-action":
+      "Where the basics become mastery — real multi-file projects, complex edits, and the patterns that separate proficient users from casual ones.",
+    "intro-mcp":
+      "Model Context Protocol is how you connect Claude to your own tools and data — files, databases, external APIs. This is the foundation for serious integrations.",
+    "mcp-advanced":
+      "Multi-server orchestration, custom transports, and production patterns for serious MCP integrations. For developers already comfortable with the basics.",
+    "intro-agent-skills":
+      "Learn to build Skills — reusable, shareable workflows that extend what Claude Code can do across sessions and projects.",
+    "intro-subagents":
+      "Subagents let Claude Code delegate complex tasks and maintain context across large amounts of work — essential for anything that doesn't fit in a single session.",
+    "claude-amazon-bedrock":
+      "How to run Claude on AWS — Bedrock console, API setup, and the integration patterns that fit naturally into AWS-based production stacks.",
+    "claude-vertex-ai":
+      "How to run Claude on Google Cloud — Vertex AI setup, API calls, and how to fit Claude into GCP-based workflows and infrastructure.",
+    "elements-of-ai":
+      "A jargon-free foundation — covers the concepts that everything else builds on, without requiring any coding.",
     "fastai-practical-dl":
       "The best hands-on ML course if you want to train real models. Top-down, practical, and built by practitioners.",
     "deeplearning-chatgpt-prompt":
