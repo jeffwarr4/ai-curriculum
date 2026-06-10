@@ -102,33 +102,24 @@ app.post("/api/discover", async (req, res) => {
 
     const response = await client.messages.create({
       model: "claude-sonnet-4-6",
-      max_tokens: 2048,
-      system: `You are a curriculum researcher. Find additional FREE AI learning resources for a specific learner profile.
+      max_tokens: 1024,
+      system: `You are a curriculum researcher. Find 3 FREE AI learning resources.
 
-Use web_search to find current, real courses. Only recommend courses you have verified exist.
-
-Return ONLY a valid JSON array — no markdown, no explanation, no prose. Just the raw JSON array starting with [ and ending with ].`,
+Rules:
+- Do AT MOST 2 web searches total, then stop and return results immediately
+- Only recommend courses you have confirmed exist
+- Return ONLY a raw JSON array — no markdown fences, no prose, nothing else`,
       tools: [{ type: "web_search_20260209", name: "web_search" }],
       messages: [
         {
           role: "user",
-          content: `Find 3–5 additional FREE AI courses or learning resources for someone who wants to ${goal} and has ${background}.
-
-They already have these courses in their curated path — do not duplicate them:
+          content: `Do ONE web search for "free AI courses ${goal}" and return the 3 best results that are NOT already in this list:
 ${existingTitles}
 
-Search for current, high-quality free resources from platforms like Coursera (free audit), edX (free audit), fast.ai, Hugging Face, DeepLearning.AI free short courses, MIT OpenCourseWare, or credible YouTube series.
+Learner: ${background}, goal: ${goal}.
 
-Return a JSON array with 3–5 items. Each item must have exactly these fields:
-{
-  "title": "string",
-  "provider": "string",
-  "url": "string — a real working URL",
-  "duration_hours": number,
-  "difficulty": "beginner" | "intermediate" | "advanced",
-  "description": "1–2 sentence description",
-  "access_model": "free" | "free_account" | "free_with_upsell" | "free_audit"
-}`,
+Return a JSON array of exactly 3 objects with these fields:
+{"title":"string","provider":"string","url":"string","duration_hours":number,"difficulty":"beginner"|"intermediate"|"advanced","description":"1-2 sentences","access_model":"free"|"free_account"|"free_with_upsell"|"free_audit"}`,
         },
       ],
     });
