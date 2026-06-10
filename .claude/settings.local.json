@@ -6,7 +6,9 @@
       "Bash(cat \"C:\\\\Users\\\\jeffw\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-jeffw-OneDrive-DevProj-ai-curriculum\\\\6cdd3dd2-098a-4695-a32a-fbf2a351a8c0\\\\tasks\\\\blo0el5mq.output\" 2>nul || echo \"Waiting for output...\")",
       "Bash(find \"c:\\\\Users\\\\jeffw\\\\OneDrive\\\\DevProj\\\\ai-curriculum\" -maxdepth 1 -type f 2>nul)",
       "Bash(grep -r \"good-yute\" \"c:\\\\Users\\\\jeffw\\\\OneDrive\\\\DevProj\\\\ai-curriculum\\\\src\" \"c:\\\\Users\\\\jeffw\\\\OneDrive\\\\DevProj\\\\ai-curriculum\\\\*.json\" \"c:\\\\Users\\\\jeffw\\\\OneDrive\\\\DevProj\\\\ai-curriculum\\\\*.md\" 2>nul)",
-      "Bash(ls -la \"c:\\\\Users\\\\jeffw\\\\OneDrive\\\\DevProj\\\\ai-curriculum\\\\src\\\\server\" 2>nul)"
+      "Bash(ls -la \"c:\\\\Users\\\\jeffw\\\\OneDrive\\\\DevProj\\\\ai-curriculum\\\\src\\\\server\" 2>nul)",
+      "Bash(git remote *)",
+      "Bash(git push *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\jeffw\\OneDrive\\DevProj\\ai-curriculum"
