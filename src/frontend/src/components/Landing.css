@@ -104,6 +104,29 @@
   color: var(--text-3);
 }
 
+.landing-secondary-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #7c3aed;
+}
+
+.landing-secondary-link:hover {
+  text-decoration: none;
+  color: #6d28d9;
+}
+
+.landing-secondary-link .cta-arrow {
+  font-size: 1rem;
+}
+
+.landing-secondary-link:hover .cta-arrow {
+  transform: translateX(3px);
+}
+
 .landing-sources {
   display: flex;
   flex-direction: column;

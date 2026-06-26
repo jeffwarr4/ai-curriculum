@@ -379,6 +379,50 @@
   color: var(--accent);
 }
 
+/* Build & Learn entry point */
+.build-learn-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 18px 22px;
+  background: #faf5ff;
+  border: 1.5px solid #e9d5ff;
+  border-radius: var(--radius);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.build-learn-card:hover {
+  text-decoration: none;
+  border-color: #c4b5fd;
+  background: #f3e8ff;
+}
+
+.build-learn-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #6d28d9;
+}
+
+.build-learn-sub {
+  font-size: 0.85rem;
+  color: var(--text-2);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+.build-learn-card .cta-arrow {
+  flex-shrink: 0;
+  font-size: 1.2rem;
+  color: #7c3aed;
+  transition: transform 0.15s;
+}
+
+.build-learn-card:hover .cta-arrow {
+  transform: translateX(3px);
+}
+
 /* Feedback */
 .feedback-section {
   margin-top: 48px;

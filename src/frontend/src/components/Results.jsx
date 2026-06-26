@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "./Results.css";
 
 const HOURS_PER_WEEK = { 0: 2, 1: 5, 2: 9 };
@@ -261,6 +262,16 @@ export default function Results({ answers }) {
             <ProjectCard project={projectCard} />
           </div>
         )}
+
+        <Link to="/discover" className="build-learn-card">
+          <div>
+            <p className="build-learn-title">Rather learn by building something?</p>
+            <p className="build-learn-sub">
+              Chat with Spark to find a personal project worth building — then get a blueprint, not a syllabus.
+            </p>
+          </div>
+          <span className="cta-arrow">→</span>
+        </Link>
 
         <div className="feedback-section">
           <h3 className="feedback-title">Anything else about what you're trying to do?</h3>

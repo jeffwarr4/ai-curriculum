@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./Landing.css";
 
 export default function Landing({ onStart }) {
@@ -25,6 +26,11 @@ export default function Landing({ onStart }) {
           </button>
 
           <p className="landing-meta">Takes about 2 minutes · No email required</p>
+
+          <Link to="/discover" className="landing-secondary-link">
+            Rather learn by building something?
+            <span className="cta-arrow">→</span>
+          </Link>
         </div>
 
         <div className="landing-sources">
