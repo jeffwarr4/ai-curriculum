@@ -20,17 +20,19 @@ export default function Landing({ onStart }) {
             Not a certificate farm — an actual path to building something.
           </p>
 
-          <button className="landing-cta" onClick={onStart}>
-            Build my learning path
-            <span className="cta-arrow">→</span>
-          </button>
+          <div className="landing-cta-row">
+            <button className="landing-cta" onClick={onStart}>
+              Build my learning path
+              <span className="cta-arrow">→</span>
+            </button>
+
+            <Link to="/discover" className="landing-cta landing-cta--secondary">
+              Learn by building something
+              <span className="cta-arrow">→</span>
+            </Link>
+          </div>
 
           <p className="landing-meta">Takes about 2 minutes · No email required</p>
-
-          <Link to="/discover" className="landing-secondary-link">
-            Rather learn by building something?
-            <span className="cta-arrow">→</span>
-          </Link>
         </div>
 
         <div className="landing-sources">
