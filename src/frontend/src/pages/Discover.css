@@ -263,6 +263,21 @@
   gap: 10px;
 }
 
+.blueprint-college-heading {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #6d28d9;
+}
+
+.blueprint-college-sub {
+  font-size: 0.82rem;
+  color: var(--text-3);
+  margin-top: -4px;
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+
 .college-box {
   border-radius: var(--radius-sm);
   padding: 12px 14px;

@@ -92,6 +92,10 @@ function BlueprintCard({ blueprint }) {
       </div>
 
       <div className="blueprint-college">
+        <p className="blueprint-college-heading">For college &amp; internship applications</p>
+        <p className="blueprint-college-sub">
+          Here's how to describe this project — right now, and once it's built:
+        </p>
         <div className="college-box college-draft">
           <p className="college-label">Starting out</p>
           <p className="college-text">{blueprint.collegeDraft}</p>
